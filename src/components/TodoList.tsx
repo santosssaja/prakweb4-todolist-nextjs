@@ -1,29 +1,33 @@
 "use client";
-
-import TodoItem from "@/components/TodoItem";
+import { AnimatePresence } from "framer-motion";
+import TodoItem from "./TodoItem";
 import { Todo } from "@/types/todo";
 
-interface TodoListProps {
+export default function TodoList({
+  todos,
+  onToggle,
+  onDelete,
+  onEdit,
+}: {
   todos: Todo[];
   onToggle: (id: string) => void;
   onDelete: (id: string) => void;
-}
-
-export default function TodoList({ todos, onToggle, onDelete }: TodoListProps) {
-  if (todos.length === 0) {
-    return <div className="text-gray-500 text-center">Belum ada tugas.</div>;
-  }
+  onEdit: (id: string, newText: string) => void;
+}) {
+  if (todos.length === 0)
+    return <p className="text-center text-gray-500">Belum ada tugas.</p>;
 
   return (
-    <div>
+    <AnimatePresence>
       {todos.map((todo) => (
         <TodoItem
           key={todo.id}
           todo={todo}
           onToggle={onToggle}
           onDelete={onDelete}
+          onEdit={onEdit}
         />
       ))}
-    </div>
+    </AnimatePresence>
   );
 }

@@ -1,3 +1,4 @@
+"use client";
 import { useState, useEffect } from "react";
 
 export function useLocalStorage<T>(key: string, initialValue: T) {
@@ -14,8 +15,8 @@ export function useLocalStorage<T>(key: string, initialValue: T) {
   useEffect(() => {
     try {
       localStorage.setItem(key, JSON.stringify(value));
-    } catch {
-      console.error("Failed to save to localStorage");
+    } catch (err) {
+      console.error("Failed to save to localStorage:", err);
     }
   }, [key, value]);
 
