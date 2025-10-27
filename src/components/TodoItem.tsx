@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { Todo } from "@/types/todo";
 
@@ -16,6 +16,8 @@ export default function TodoItem({
 }) {
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(todo.text);
+
+  const saveBtnRef = useRef<HTMLButtonElement | null>(null);
 
   useEffect(() => {
     setEditText(todo.text);
@@ -49,7 +51,11 @@ export default function TodoItem({
           <input
             value={editText}
             onChange={(e) => setEditText(e.target.value)}
-            onBlur={handleEdit}
+            onBlur={(e) => {
+              // If the Save button is being clicked, skip onBlur handling here
+              if (saveBtnRef.current && document.activeElement === saveBtnRef.current) return;
+              handleEdit();
+            }}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
                 handleEdit();
@@ -71,7 +77,12 @@ export default function TodoItem({
       </div>
       <div className="flex gap-2 ml-2">
         {isEditing ? (
-          <button onClick={handleEdit} className="text-green-500 hover:text-green-700">
+          <button
+            ref={saveBtnRef}
+            onClick={handleEdit}
+            className="text-green-500 hover:text-green-700"
+            type="button"
+          >
             Save
           </button>
         ) : (

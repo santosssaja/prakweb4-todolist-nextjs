@@ -18,14 +18,14 @@ export default function Page() {
   const [todoToDelete, setTodoToDelete] = useState<string | null>(null);
 
   const addTodo = (text: string) => {
-    setTodos([...todos, { id: uuid(), text, completed: false, createdAt: Date.now() }]);
+    setTodos((prev) => [...prev, { id: uuid(), text, completed: false, createdAt: Date.now() }]);
   };
 
   const toggleTodo = (id: string) =>
-    setTodos(todos.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t)));
+    setTodos((prev) => prev.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t)));
 
   const deleteTodo = (id: string) => {
-    setTodos(todos.filter((t) => t.id !== id));
+    setTodos((prev) => prev.filter((t) => t.id !== id));
   };
 
   const openConfirmDialog = (id: string) => {
@@ -47,7 +47,7 @@ export default function Page() {
   };
 
   const editTodo = (id: string, newText: string) =>
-    setTodos(todos.map((t) => (t.id === id ? { ...t, text: newText } : t)));
+    setTodos((prev) => prev.map((t) => (t.id === id ? { ...t, text: newText } : t)));
 
   const filtered = todos
     .filter((t) =>
