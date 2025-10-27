@@ -1,4 +1,6 @@
-export const exportTodos = (todos: any[]) => {
+import { Todo } from "@/types/todo";
+
+export const exportTodos = (todos: Todo[]) => {
   const blob = new Blob([JSON.stringify(todos, null, 2)], {
     type: "application/json",
   });
@@ -10,7 +12,7 @@ export const exportTodos = (todos: any[]) => {
   URL.revokeObjectURL(url);
 };
 
-export const importTodos = (file: File, callback: (data: any[]) => void) => {
+export const importTodos = (file: File, callback: (data: Todo[]) => void) => {
   const reader = new FileReader();
   reader.onload = (e) => {
     try {

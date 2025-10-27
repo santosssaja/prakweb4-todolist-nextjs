@@ -1,16 +1,14 @@
 "use client";
 import { useState } from "react";
 
-export default function TodoInput({ onAdd }: { onAdd: (text: string, dueDate?: string) => void }) {
+export default function TodoInput({ onAdd }: { onAdd: (text: string) => void }) {
   const [text, setText] = useState("");
-  const [due, setDue] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!text.trim()) return;
-    onAdd(text.trim(), due);
+    onAdd(text.trim());
     setText("");
-    setDue("");
   };
 
   return (
@@ -19,13 +17,7 @@ export default function TodoInput({ onAdd }: { onAdd: (text: string, dueDate?: s
         value={text}
         onChange={(e) => setText(e.target.value)}
         placeholder="Tambahkan tugas..."
-        className="flex-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
-      />
-      <input
-        type="date"
-        value={due}
-        onChange={(e) => setDue(e.target.value)}
-        className="px-3 py-2 border rounded-lg"
+        className="flex-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 bg-transparent dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-400"
       />
       <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
         Add
