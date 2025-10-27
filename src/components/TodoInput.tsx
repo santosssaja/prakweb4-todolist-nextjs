@@ -17,9 +17,9 @@ export default function TodoInput({ onAdd }: { onAdd: (text: string) => void }) 
         value={text}
         onChange={(e) => setText(e.target.value)}
         placeholder="Tambahkan tugas..."
-        className="flex-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 bg-transparent dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-400"
+        className="flex-1 px-4 py-3 text-lg border rounded-lg focus:ring-2 focus:ring-blue-500 bg-transparent dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-400"
       />
-      <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
+      <button type="submit" className="bg-blue-500 text-white px-6 py-3 text-lg rounded-lg hover:bg-blue-600">
         Add
       </button>
     </form>

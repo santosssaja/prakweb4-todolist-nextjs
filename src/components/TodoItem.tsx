@@ -1,7 +1,7 @@
-"use client";
-import { useState, useEffect, useRef } from "react";
-import { motion } from "framer-motion";
-import { Todo } from "@/types/todo";
+'use client'
+import { useState, useEffect, useRef, useCallback } from 'react'
+import { motion } from 'framer-motion'
+import { Todo } from '@/types/todo'
 
 export default function TodoItem({
   todo,
@@ -9,84 +9,110 @@ export default function TodoItem({
   onDelete,
   onEdit,
 }: {
-  todo: Todo;
-  onToggle: (id: string) => void;
-  onDelete: (id: string) => void;
-  onEdit: (id: string, newText: string) => void;
+  todo: Todo
+  onToggle: (id: string) => void
+  onDelete: (id: string) => void
+  onEdit: (id: string, newText: string) => void
 }) {
-  const [isEditing, setIsEditing] = useState(false);
-  const [editText, setEditText] = useState(todo.text);
+  const [isEditing, setIsEditing] = useState(false)
+  const [editText, setEditText] = useState(todo.text)
 
-  const saveBtnRef = useRef<HTMLButtonElement | null>(null);
+  const itemRef = useRef<HTMLDivElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
 
+  // Update editText state if the todo.text prop changes from parent
   useEffect(() => {
-    setEditText(todo.text);
-  }, [todo.text]);
+    setEditText(todo.text)
+  }, [todo.text])
 
-  const handleEdit = () => {
+  const handleEdit = useCallback(() => {
     if (editText.trim()) {
-      onEdit(todo.id, editText.trim());
-      setIsEditing(false);
+      onEdit(todo.id, editText.trim())
     } else {
-      setEditText(todo.text); // Revert if empty
+      setEditText(todo.text) // Revert if empty
     }
-  };
+    setIsEditing(false)
+  }, [editText, onEdit, todo.id, todo.text])
+
+  // Focus input when entering edit mode
+  useEffect(() => {
+    if (isEditing) {
+      inputRef.current?.focus()
+    }
+  }, [isEditing])
+
+  // Click outside to save
+  useEffect(() => {
+    if (!isEditing) return
+
+    const handleClickOutside = (event: MouseEvent) => {
+      if (itemRef.current && !itemRef.current.contains(event.target as Node)) {
+        handleEdit()
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isEditing, handleEdit])
 
   return (
     <motion.div
+      ref={itemRef}
       layout
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -10 }}
-      className={`flex justify-between items-center p-3 rounded-lg shadow-sm mb-2 transition-colors bg-white dark:bg-gray-800`}
+      className={`flex justify-between items-center p-4 rounded-lg shadow-sm mb-3 transition-colors bg-white dark:bg-gray-800`}
     >
-      <div className="flex items-center gap-2 w-full">
+      <div className="flex items-center gap-4 w-full">
         <input
           type="checkbox"
           checked={todo.completed}
           onChange={() => onToggle(todo.id)}
-          className="w-4 h-4"
+          className="w-5 h-5"
         />
         {isEditing ? (
           <input
+            ref={inputRef}
             value={editText}
             onChange={(e) => setEditText(e.target.value)}
-            onBlur={(e) => {
-              // If the Save button is being clicked, skip onBlur handling here
-              if (saveBtnRef.current && document.activeElement === saveBtnRef.current) return;
-              handleEdit();
-            }}
             onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                handleEdit();
+              if (e.key === 'Enter') handleEdit()
+              if (e.key === 'Escape') {
+                setIsEditing(false)
+                setEditText(todo.text)
               }
             }}
-            className={`bg-transparent w-full outline-none ${
-              todo.completed ? "line-through text-gray-400" : ""
+            className={`bg-transparent w-full outline-none text-lg ${
+              todo.completed ? 'line-through text-gray-400' : ''
             }`}
-            autoFocus
           />
         ) : (
           <span
-            className={`w-full ${todo.completed ? "line-through text-gray-400" : ""}`}
+            className={`w-full text-lg ${
+              todo.completed ? 'line-through text-gray-400' : ''
+            }`}
             onDoubleClick={() => setIsEditing(true)}
           >
             {todo.text}
           </span>
         )}
       </div>
-      <div className="flex gap-2 ml-2">
+      <div className="flex gap-3 ml-4 text-lg">
         {isEditing ? (
           <button
-            ref={saveBtnRef}
             onClick={handleEdit}
             className="text-green-500 hover:text-green-700"
-            type="button"
           >
             Save
           </button>
         ) : (
-          <button onClick={() => setIsEditing(true)} className="text-blue-500 hover:text-blue-700">
+          <button
+            onClick={() => setIsEditing(true)}
+            className="text-blue-500 hover:text-blue-700"
+          >
             Edit
           </button>
         )}
@@ -98,5 +124,5 @@ export default function TodoItem({
         </button>
       </div>
     </motion.div>
-  );
+  )
 }

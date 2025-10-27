@@ -67,8 +67,8 @@ export default function Page() {
   return (
     <main className="relative min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white p-6">
       <ThemeToggle />
-      <div className="max-w-md mx-auto bg-white dark:bg-gray-800 p-6 rounded-xl shadow">
-        <h1 className="text-2xl font-bold mb-4 text-center">📝 To-Do List</h1>
+      <div className="max-w-2xl mx-auto bg-white dark:bg-gray-800 p-8 rounded-xl shadow">
+        <h1 className="text-4xl font-bold mb-4 text-center">📝 To-Do List</h1>
 
         <TodoInput onAdd={addTodo} />
 
